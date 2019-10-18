@@ -1,0 +1,10 @@
+{
+    "localFiles": "D:\\Downloads\\房龙\\**\\*.{epub,azw3,mobi}",
+    "sftp": {
+        "host": "www.xxx.com",
+        "port": "2222",
+        "username": "user",
+        "password": "pwd",
+        "remotePath": "/archives/Books/Existing/"
+    }
+}
