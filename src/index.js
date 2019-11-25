@@ -74,7 +74,7 @@ const dbPath = "./sqlite/";
   // If the `nonull` option is set, and nothing
   // was found, then files is ["**/*.js"]
   // er is an error object or null.
-  files.forEach(async file => {
+  asyncForEach(files, async file => {
     const filename = path.basename(file);
     const hash = await md5File(file);
     console.log(`The MD5 sum of ${file} is: ${hash}`);
@@ -90,6 +90,13 @@ const dbPath = "./sqlite/";
         await db.run(
           SQL`INSERT INTO filehashes (hash, filename) VALUES (${hash}, ${filename})`
         );
+        if (config.deleteSource) {
+          await fs.unlink(file);
+        }
+      }
+    } else {
+      if (config.deleteSource) {
+        await fs.unlink(file);
       }
     }
   });
@@ -97,6 +104,13 @@ const dbPath = "./sqlite/";
 setInterval(function() {
   console.log("timer that keeps nodejs processing running");
 }, 1000 * 60 * 60);
+
+async function asyncForEach(array, callback) {
+  for (let index = 0; index < array.length; index++) {
+    await callback(array[index], index, array);
+  }
+}
+
 /**
  * 文件遍历方法
  * @param filePath 需要遍历的文件路径
